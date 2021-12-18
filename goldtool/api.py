@@ -83,15 +83,3 @@ def get_season_battles(api_key: str, clan_member: List[ClanMember], season_id: s
         member.t8 = t8_battles if t8_battles is not None else 0
         time.sleep(0.5)
     return clan_member
-
-
-def test_run():
-
-
-    clan_id = get_clan_id(api_key=api_key, clan_tag=clan_tag)
-    clan_member = get_player_from_clan(api_key=api_key, clan_id=clan_id)
-    clan_member = get_season_battles(api_key=api_key, clan_member=clan_member, season_id=season_id)
-    export_to_excel(clan_member)
-
-
-test_run()

@@ -1,4 +1,4 @@
-import webbrowser
+"""import webbrowser
 from threading import Thread
 
 from kivy.app import App
@@ -69,4 +69,4 @@ class GoldTool(App):
 
 
 if __name__ == '__main__':
-    GoldTool().run()
+    GoldTool().run()"""
