@@ -22,4 +22,6 @@ jobs:
           python -m pip install pytest pytest-cov pytest-timeout
           python -m pip install -r requirements.txt
       - name: Test
+        env:
+          WARGAMING_API_KEY: ${{secrets.WARGAMING_API_KEY}}
         run: python -m pytest
