@@ -6,8 +6,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
-from goldtool.util import ClanMember, Season, InvalidAPIKeyException, MissingResultException
-
+from goldtool.util import ClanMember, Season, InvalidAPIKeyException, MissingResultException, APIException
 
 BASE_URL = "https://api.worldoftanks.eu/wot"
 '''Base URL for all WOT related api calls to the wargaming api'''
@@ -55,6 +54,8 @@ def get_request(endpoint: str, params: Dict[str, str] = None, fields: List[str] 
 
     if json_response['status'] == 'error' and json_response['error']['message'] == 'INVALID_APPLICATION_ID':
         raise InvalidAPIKeyException(json_response['error']['message'])
+    if json_response['status'] == 'error':
+        raise APIException(json_response['error']['message'])
     return json_response['data']
 
 
