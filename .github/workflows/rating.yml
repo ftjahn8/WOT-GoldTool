@@ -22,7 +22,7 @@ jobs:
           python -m pip install pylint
           python -m pip install -r requirements.txt
       - name: rate
-        run: pylint --reports=y .\goldtool
+        run: pylint --reports=y goldtool
 
   Flake8:
     runs-on: ubuntu-latest
