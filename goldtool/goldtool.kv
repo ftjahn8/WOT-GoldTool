@@ -1,0 +1,125 @@
+#:import Factory kivy.factory.Factory
+
+# class overrides
+<TextInput>:
+    multiline: False
+    size_hint: 0.55, None
+    height: 32
+
+<Label>:
+    halign: 'center'
+    valign: 'middle'
+
+<StandaloneLabel@Label>:
+    text_size: self.size
+    size_hint: 0.2, 0.1
+    halign: 'left'
+    valign: 'middle'
+
+
+<APIKeyPopup@Popup>:
+    size_hint: 1, 1
+    title: 'Enter your API-Key'
+    FloatLayout:
+        StandaloneLabel:
+            text: "Please enter your API-Key in the text input below.\n\nTo create a new one go to\nthe WG Developer's Room\n(developers.wargaming.net/applications)\nand create a new app\n(name irrelevant, type mobile).\nThe ID of your app is the needed API-Key."
+            size_hint: 0.9, 0.8
+            pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+
+        StandaloneLabel:
+            text: 'API-Key'
+            size_hint: 0.15, None
+            pos_hint: {'center_x': 0.1, 'center_y': 0.3}
+
+        TextInput:
+            id: popup_api_key
+            size_hint: 0.7, None
+            pos_hint: {'center_x': 0.6, 'center_y': 0.3}
+        Button:
+            text: "Open WG's\nDeveloper's Room"
+            size_hint: None, None
+            size: 150, 48
+            pos_hint: {'center_x': 0.2, 'center_y': 0.1}
+            on_press: app.open_dev_center()
+
+        Button:
+            text: "Close Popup"
+            size_hint: None, None
+            size: 150, 48
+            pos_hint: {'center_x': 0.8, 'center_y': 0.1}
+            on_press: app.set_api_key(popup_api_key.text); root.dismiss()
+
+# application tree
+FloatLayout:
+    size_hint: 1, 1
+
+    StandaloneLabel:
+        text: "Gold-Tool for WOT-Clans"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        size_hint: 0.5, 0.1
+        halign: 'center'
+
+    StandaloneLabel:
+        text: "API-Key"
+        pos_hint: {'x': 0.1, 'center_y': 0.7}
+
+    TextInput:
+        id: show_key
+        pos_hint: {'x': 0.3, 'center_y': 0.7}
+        text: 'No Key entered.'
+        disabled: True
+
+    Button:
+        id: api_key
+        text: "?"
+        pos_hint: {'x': 0.85, 'center_y': 0.699}
+        size_hint: 0.1, None
+        height: 32
+        on_press: Factory.APIKeyPopup().open()
+
+    StandaloneLabel:
+        text: "Clan-Tag"
+        pos_hint: {'x': 0.1, 'center_y': 0.6}
+
+    TextInput:
+        id: clan_tag
+        pos_hint: {'x': 0.3, 'center_y': 0.6}
+        size_hint_x: 0.2
+
+    StandaloneLabel:
+        text: "Clan-Tag"
+        pos_hint: {'x': 0.1, 'center_y': 0.5}
+
+    TextInput:
+        id: clan_tag
+        pos_hint: {'x': 0.3, 'center_y': 0.5}
+        size_hint_x: 0.2
+
+    StandaloneLabel:
+        id: warning
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        text: "Warning Fehler ETC"
+        pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+        size_hint: 0.8, 0.15
+        halign: 'center'
+        color: 0, 0, 0, 1
+        markdown: True
+
+    StandaloneLabel:
+        text: "created by ftjahn8"
+        pos_hint: {'x': 0.1, 'center_y': 0.16}
+        size_hint: 0.3, 0.1
+        font_size: 10
+
+    Button:
+        id: create_button
+        text: 'Create'
+        pos_hint: {'x': 0.7, 'center_y': 0.15}
+        size_hint: None, None
+        size: 100, 32
+        on_press: app.start_procedure()
