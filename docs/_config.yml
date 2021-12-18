@@ -1,6 +1,8 @@
 # name of the software
 name: ftjahn8's GoldTool
 
+remote_theme: allejo/jekyll-docs-theme@v1.0.0
+
 project:
   version: 1.0.0
   download_url: https://github.com/ftjahn8/WOT-GoldTool/releases
