@@ -48,7 +48,7 @@ def export_to_excel(member: List[ClanMember]) -> None:
     # sort players with most battles to the top
     players = sorted(member, key=lambda player: player.t10 + player.t8, reverse=True)
 
-    #create new workbook and set default styling and titles
+    # create new workbook and set default styling and titles
     workbook = openpyxl.Workbook()
     sheet = workbook.active
 
