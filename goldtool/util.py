@@ -1,5 +1,8 @@
 """This file contains all Dataclasses and exceptions and the excel exporter function for this tool."""
+import os
+
 from typing import List
+from datetime import datetime
 from dataclasses import dataclass
 
 import openpyxl
@@ -7,7 +10,7 @@ import openpyxl
 
 @dataclass
 class ClanMember:
-    """Represents a single clan member with account id and name and his battles in clanwars
+    """Represents a single clan member with account id and name and his battles in clan wars.
      at tier 8 and 10 for a single season."""
     name: str
     id: int
@@ -35,10 +38,24 @@ class MissingResultException(APIException):
     """Special Exception for empty responses."""
 
 
-def export_to_excel(member: List[ClanMember]) -> None:
+def get_file_path(clan_tag: str, season: str) -> str:
+    """
+    Returns the path for the new file to export.
+    Contains clan tag, season name and timestamp in the name.
+    :param clan_tag: used clan tag
+    :param season: used season
+    :return: path of export file
+    """
+    now = datetime.now()
+    timestamp = now.strftime("%d-%m-%Y_%H-%M")
+    return f"{os.path.dirname(os.path.abspath(__file__))}{os.sep}GoldTool_{clan_tag}_{season}_{timestamp}.xlsx"
+
+
+def export_to_excel(member: List[ClanMember], file_path: str) -> None:
     """
     Exports all data for the given clan members to an excel file.
     :param member: List of ClanMember objects containing all information to be exported
+    :param file_path: target path to export file to
     :return: None
     """
     # format and titles of the hard coded excel structure
@@ -46,7 +63,7 @@ def export_to_excel(member: List[ClanMember]) -> None:
     column_title = {'A': 'Name', 'B': 'T10', 'C': 'T8', 'D': 'Combined', 'E': 'Gold Rounded'}
 
     # sort players with most battles to the top
-    players = sorted(member, key=lambda player: player.t10 + player.t8, reverse=True)
+    players = sorted(member, key=lambda element: element.t10 + element.t8, reverse=True)
 
     # create new workbook and set default styling and titles
     workbook = openpyxl.Workbook()
@@ -84,4 +101,4 @@ def export_to_excel(member: List[ClanMember]) -> None:
     # hide battle counter columns
     sheet.column_dimensions.group('B', 'D', hidden=True)
     # save created excel file to hard drive
-    workbook.save(f'GoldClanTool-{"TEST"}-.xlsx')
+    workbook.save(file_path)

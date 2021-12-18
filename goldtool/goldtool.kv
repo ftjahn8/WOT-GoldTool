@@ -22,7 +22,7 @@
     title: 'Enter your API-Key'
     FloatLayout:
         StandaloneLabel:
-            text: "Please enter your API-Key in the text input below.\n\nTo create a new one go to\nthe WG Developer's Room\n(developers.wargaming.net/applications)\nand create a new app\n(name irrelevant, type mobile).\nThe ID of your app is the needed API-Key."
+            text: "Please enter your API-Key in the text input below.\n\nTo get your own API-Key: \n1. go to the WG Developer's Room (developers.wargaming.net/applications)\n2. create a new app (name irrelevant, type mobile).\n    The ID of your app is the needed API-Key."
             size_hint: 0.9, 0.8
             pos_hint: {'center_x': 0.5, 'center_y': 0.7}
 
@@ -35,15 +35,23 @@
             id: popup_api_key
             size_hint: 0.7, None
             pos_hint: {'center_x': 0.6, 'center_y': 0.3}
+
+        Button:
+            text: "Cancel"
+            size_hint: None, None
+            size: 150, 48
+            pos_hint: {'center_x': 0.2, 'center_y': 0.1}
+            on_press: root.dismiss()
+
         Button:
             text: "Open WG's\nDeveloper's Room"
             size_hint: None, None
             size: 150, 48
-            pos_hint: {'center_x': 0.2, 'center_y': 0.1}
+            pos_hint: {'center_x': 0.5, 'center_y': 0.1}
             on_press: app.open_dev_center()
 
         Button:
-            text: "Close Popup"
+            text: "Set Key"
             size_hint: None, None
             size: 150, 48
             pos_hint: {'center_x': 0.8, 'center_y': 0.1}
@@ -87,13 +95,16 @@ FloatLayout:
         size_hint_x: 0.2
 
     StandaloneLabel:
-        text: "Clan-Tag"
+        text: "Season"
         pos_hint: {'x': 0.1, 'center_y': 0.5}
 
-    TextInput:
-        id: clan_tag
+    Spinner:
+        id: season
+        text: 'No Season selected'
         pos_hint: {'x': 0.3, 'center_y': 0.5}
-        size_hint_x: 0.2
+        size_hint_y: None
+        height: 32
+        size_hint_x: 0.4
 
     StandaloneLabel:
         id: warning
@@ -103,7 +114,7 @@ FloatLayout:
             Rectangle:
                 pos: self.pos
                 size: self.size
-        text: "Warning Fehler ETC"
+        text: "Hey. Welcome to the GoldTool.\nStart with your API-Key. Enter it at the ?-Popup."
         pos_hint: {'center_x': 0.5, 'center_y': 0.3}
         size_hint: 0.8, 0.15
         halign: 'center'
@@ -118,8 +129,8 @@ FloatLayout:
 
     Button:
         id: create_button
-        text: 'Create'
-        pos_hint: {'x': 0.7, 'center_y': 0.15}
+        text: 'Start'
+        pos_hint: {'right': 0.9, 'center_y': 0.15}
         size_hint: None, None
         size: 100, 32
         on_press: app.start_procedure()
