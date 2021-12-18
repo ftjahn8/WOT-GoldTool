@@ -1,3 +1,4 @@
+"""This file contains all Dataclasses and exceptions and the excel exporter function for this tool."""
 from typing import List
 from dataclasses import dataclass
 
@@ -6,35 +7,48 @@ import openpyxl
 
 @dataclass
 class ClanMember:
+    """Represents a single clan member with account id and name and his battles in clanwars
+     at tier 8 and 10 for a single season."""
     name: str
     id: int
+    season_id: str = None
     t8: int = 0
     t10: int = 0
 
 
 @dataclass(frozen=True)
 class Season:
+    """Represents a single season on the globalmap (season or campaign!) with its id and name."""
     name: str
     id: str
 
 
 class APIException(Exception):
-    """"""
+    """Base Custom Exception for Exceptions occurring in the API communication."""
 
 
 class InvalidAPIKeyException(APIException):
-    """"""
+    """Special Exception for invalid API Key."""
 
 
 class MissingResultException(APIException):
-    """"""
+    """Special Exception for empty responses."""
 
 
 def export_to_excel(member: List[ClanMember]) -> None:
+    """
+    Exports all data for the given clan members to an excel file.
+    :param member: List of ClanMember objects containing all information to be exported
+    :return: None
+    """
+    # format and titles of the hard coded excel structure
     column_width = {'A': 25, 'B': 10, 'C': 10, 'D': 10, 'E': 15}
     column_title = {'A': 'Name', 'B': 'T10', 'C': 'T8', 'D': 'Combined', 'E': 'Gold Rounded'}
 
+    # sort players with most battles to the top
     players = sorted(member, key=lambda player: player.t10 + player.t8, reverse=True)
+
+    #create new workbook and set default styling and titles
     workbook = openpyxl.Workbook()
     sheet = workbook.active
 
@@ -44,6 +58,7 @@ def export_to_excel(member: List[ClanMember]) -> None:
     for column, title in column_title.items():
         sheet[f"{column}1"] = title
 
+    # set options on right side of prepared structure
     sheet['J' + str(1)] = 'available Gold'
     sheet['J' + str(2)] = 0
 
@@ -56,14 +71,17 @@ def export_to_excel(member: List[ClanMember]) -> None:
     sheet['J' + str(10)] = "Gold per battle"
     sheet['J' + str(11)] = "=J$2 / J$8"
 
-    s = 2
+    # export all player data (name, number of battles) and set prepared functions to calculate deserved payouts
+    current_row = 2
     for player in players:
-        sheet[f'A{s}'] = player.name
-        sheet[f'B{s}'] = player.t10
-        sheet[f'C{s}'] = player.t8
-        sheet[f'D{s}'] = f"=B{s} + C{s}"
-        sheet[f'E{s}'] = f"=ROUND(D{s}* J$11, 0)"
-        s += 1
+        sheet[f'A{current_row}'] = player.name
+        sheet[f'B{current_row}'] = player.t10
+        sheet[f'C{current_row}'] = player.t8
+        sheet[f'D{current_row}'] = f"=B{current_row} + C{current_row}"
+        sheet[f'E{current_row}'] = f"=ROUND(D{current_row}* J$11, 0)"
+        current_row += 1
 
+    # hide battle counter columns
     sheet.column_dimensions.group('B', 'D', hidden=True)
+    # save created excel file to hard drive
     workbook.save(f'GoldClanTool-{"TEST"}-.xlsx')
