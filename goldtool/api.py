@@ -49,7 +49,7 @@ def get_request(endpoint: str, params: Dict[str, str] = None, fields: List[str] 
     response.raise_for_status()
     try:
         json_response = response.json()
-    except Exception as exc:  # pylint: ignore=broad-except
+    except Exception as exc:  # pylint: disable=broad-except
         print(exc)
         return response.text
 
