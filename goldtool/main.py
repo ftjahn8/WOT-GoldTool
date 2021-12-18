@@ -6,7 +6,7 @@ from requests import HTTPError
 from kivy.app import App
 from kivy.clock import mainthread
 from kivy.config import Config
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty  # pylint: disable=no-name-in-module
 
 from goldtool.api import get_season, get_clan_id, get_player_from_clan, get_season_battles
 from goldtool.util import export_to_excel, InvalidAPIKeyException, APIException, MissingResultException, get_file_path
@@ -21,7 +21,7 @@ Config.set('input', 'mouse', 'mouse, multitouch_on_demand')
 class GoldTool(App):
     """Main Application class for this Tool."""
 
-    API_KEY = StringProperty()
+    api_key = StringProperty()
     '''entered API-Key for the complete process.'''
 
     season_lookup = {}
@@ -73,7 +73,7 @@ class GoldTool(App):
         :param new_key: entered API key to be saved
         :return: None
         """
-        self.API_KEY = new_key
+        self.api_key = new_key
         if not new_key:
             self.set_warning("Missing API-Key!\nPlease enter an API-Key via the popup.")
             self.lock_inputs()
@@ -90,7 +90,7 @@ class GoldTool(App):
         :return: None
         """
         try:
-            seasons = get_season(self.API_KEY)
+            seasons = get_season(self.api_key)
         except InvalidAPIKeyException:
             self.set_warning("Your API-Key is invalid. Please correct it.")
         else:
@@ -121,9 +121,9 @@ class GoldTool(App):
         def analysis_procedure():
             """main procedure to create output, separated by gui through thread to prevent gui from freezing"""
             try:
-                clan_id = get_clan_id(self.API_KEY, clan_tag)
-                clan_member = get_player_from_clan(self.API_KEY, clan_id)
-                clan_member = get_season_battles(self.API_KEY, clan_member, season_id)
+                clan_id = get_clan_id(self.api_key, clan_tag)
+                clan_member = get_player_from_clan(self.api_key, clan_id)
+                clan_member = get_season_battles(self.api_key, clan_member, season_id)
             except InvalidAPIKeyException:
                 self.set_warning("Your API-Key is invalid. Please correct it."
                                  "\nCurrent Process was cancelled therefore.")
@@ -132,7 +132,7 @@ class GoldTool(App):
                                  "\nCurrent Process was cancelled therefore.")
             except (APIException, HTTPError) as unexpected_exc:
                 self.set_warning(f"Unexpected Error. Stopped process due to error:"
-                                 f"\n{type(unexpected_exc)}: {str(unexpected_exc.value)}")
+                                 f"\n{type(unexpected_exc)}: {str(unexpected_exc)}")
             else:
                 # eeeeeeeeeeeeeeeeeeeexport!
                 file_path = get_file_path(clan_tag, season)
